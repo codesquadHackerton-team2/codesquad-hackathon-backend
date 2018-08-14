@@ -10,6 +10,11 @@ public class RegisteredUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long userId;
+
+    private String username;
+    private String password;
+    private String nickname;
 
     public boolean isRegistered() {
         return true;
