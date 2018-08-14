@@ -24,6 +24,7 @@ public class RegisteredUser {
     private String profileHref;
 
     private String githubCode;
+    private String email;
 
     @OneToMany(mappedBy = "user")
     private List<Article> articles = newArrayList();

@@ -1,7 +1,6 @@
 package com.codesquad.codereviewers.configuration;
 
 import com.codesquad.codereviewers.domain.RegisteredUser;
-import com.google.common.collect.Maps;
 
 import java.util.Map;
 
@@ -21,6 +20,11 @@ public class GithubUserProperty implements SocialUserProperty {
     @Override
     public String getProfileHref() {
         return properties.get("avatar_url");
+    }
+
+    @Override
+    public String getEmail() {
+        return properties.get("email");
     }
 
     @Override

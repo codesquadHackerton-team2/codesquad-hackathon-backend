@@ -5,6 +5,7 @@ import com.codesquad.codereviewers.domain.RegisteredUser;
 public interface SocialUserProperty {
     String getName();
     String getProfileHref();
+    String getEmail();
     String getNickname();
 
     RegisteredUser generateEntity();
