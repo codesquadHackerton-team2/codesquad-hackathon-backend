@@ -22,6 +22,9 @@ public class Review {
     private String title;
     private String content;
 
+    @Embedded
+    private Position position;
+
     @Embeddable
     @Getter
     @AllArgsConstructor

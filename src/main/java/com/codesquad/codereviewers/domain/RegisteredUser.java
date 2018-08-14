@@ -1,12 +1,11 @@
 package com.codesquad.codereviewers.domain;
 
-
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
+
+import static com.google.common.collect.Lists.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,8 +20,13 @@ public class RegisteredUser {
     private long userId;
 
     private String username;
-    private String password;
     private String nickname;
+    private String profileHref;
+
+    private String githubCode;
+
+    @OneToMany(mappedBy = "user")
+    private List<Article> articles = newArrayList();
 
     public boolean isRegistered() {
         return true;
