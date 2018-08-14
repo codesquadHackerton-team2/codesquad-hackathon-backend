@@ -7,7 +7,11 @@ import java.util.Map;
 
 public class GithubUserProperty implements SocialUserProperty {
 
-    private Map<String, String> properties = Maps.newHashMap();
+    private Map<String, String> properties;
+
+    public GithubUserProperty(Map<String, String> properties) {
+        this.properties = properties;
+    }
 
     @Override
     public String getName() {
