@@ -1,5 +1,6 @@
 package com.codesquad.codereviewers.domain;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,4 +20,6 @@ public class RegisteredUser {
     public boolean isRegistered() {
         return true;
     }
+
+    protected RegisteredUser() {}
 }
