@@ -70,6 +70,12 @@
             <version>25.1-jre</version>
         </dependency>
 
+        <!--Spring Security-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>2.0.2.RELEASE</version>
+        </dependency>
 
     </dependencies>
 
