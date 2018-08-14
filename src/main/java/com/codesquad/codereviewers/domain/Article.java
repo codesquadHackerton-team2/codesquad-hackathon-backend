@@ -1,11 +1,18 @@
 package com.codesquad.codereviewers.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Getter
+@Setter
 public class Article {
 
     @Id
@@ -14,6 +21,19 @@ public class Article {
 
     private String title;
     private String content;
+    private String permalink;
+
+    @CreatedDate
+    private LocalDateTime createdTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedTime;
+
+    @ManyToOne
+    private RegisteredUser user;
+
+    @Embedded
+    private ContentType contentType;
 
 
 }
