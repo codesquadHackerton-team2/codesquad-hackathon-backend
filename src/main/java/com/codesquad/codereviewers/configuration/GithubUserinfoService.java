@@ -1,5 +1,8 @@
 package com.codesquad.codereviewers.configuration;
 
+import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -13,6 +16,7 @@ import java.util.Map;
 
 @Component
 public class GithubUserinfoService {
+    private final Logger log = LoggerFactory.getLogger(GithubUserinfoService.class);
     private static final String HEADER_PREFIX = "token ";
 
     @Value("${github.userinfo.endpoint}")
@@ -21,7 +25,16 @@ public class GithubUserinfoService {
     @Value("${github.token.endpoint}")
     private String tokenExchangeEndpoint;
 
+    @Value("${github.client_id}")
+    private String clientId;
+
+    @Value("${github.client_secret}")
+    private String clientSecret;
+
+
     public GithubUserProperty fetchUserProperty(String token) {
+        log.info("processing authentication request for token {}", token);
+
         RestTemplate template = new RestTemplate();
         HttpEntity<String> entity = new HttpEntity<>("parameters", generateHeaders(token));
         ParameterizedTypeReference<Map<String, String>> typeRef = new ParameterizedTypeReference<Map<String, String>>() {};
@@ -30,6 +43,14 @@ public class GithubUserinfoService {
         Map<String, String> properties = responseEntity.getBody();
 
         return new GithubUserProperty(properties);
+    }
+
+    public String fetchUserToken(String originalToken) {
+        RestTemplate template = new RestTemplate();
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(generatePostMap(originalToken));
+
+        ResponseEntity<String> response = template.postForEntity(tokenExchangeEndpoint, request, String.class);
+        return response.getBody();
     }
 
     private HttpHeaders generateHeaders(String token) {
@@ -44,5 +65,16 @@ public class GithubUserinfoService {
         header.append(token);
 
         return header.toString();
+    }
+
+    private Map<String, String> generatePostMap(String code) {
+        Map<String, String> requestParams = Maps.newHashMap();
+
+        requestParams.put("client_id", clientId);
+        requestParams.put("client_secret", clientSecret);
+        requestParams.put("code", code);
+        log.info("generated request parameters: {}", requestParams);
+
+        return requestParams;
     }
 }

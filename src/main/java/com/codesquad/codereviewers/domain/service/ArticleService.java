@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 @Service
@@ -17,6 +18,11 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public Article getSingleArticle(Long id) {
         return articleRepository.findById(id).orElseThrow(supplyException());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Article> getAllArticle() {
+        return articleRepository.findAll();
     }
 
     @Transactional

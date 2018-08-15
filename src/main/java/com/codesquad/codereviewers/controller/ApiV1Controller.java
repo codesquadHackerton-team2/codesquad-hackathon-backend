@@ -1,13 +1,16 @@
 package com.codesquad.codereviewers.controller;
 
+import com.codesquad.codereviewers.configuration.security.LoggedOnToken;
 import com.codesquad.codereviewers.controller.views.request.NewArticleRequest;
 import com.codesquad.codereviewers.domain.Article;
+import com.codesquad.codereviewers.domain.RegisteredUser;
 import com.codesquad.codereviewers.domain.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -17,8 +20,17 @@ public class ApiV1Controller {
     private ArticleService articleService;
 
     @PostMapping("/article/new")
-    public void saveNewArticle(@RequestBody NewArticleRequest request) {
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void saveNewArticle(@RequestBody NewArticleRequest request, @AuthenticationPrincipal LoggedOnToken token) {
         Article article = request.toEntity();
+        RegisteredUser user = token.getPrincipal();
+        article.setUser(user);
+
         articleService.saveArticle(article);
+    }
+
+    @GetMapping("/article")
+    public List<Article> getAllArticles() {
+        return articleService.getAllArticle();
     }
 }
