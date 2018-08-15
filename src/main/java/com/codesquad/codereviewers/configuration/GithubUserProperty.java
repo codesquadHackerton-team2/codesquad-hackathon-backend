@@ -33,7 +33,19 @@ public class GithubUserProperty implements SocialUserProperty {
     }
 
     @Override
+    public String getDescription() {
+        return properties.get("bio");
+    }
+
+    @Override
     public RegisteredUser generateEntity() {
         return RegisteredUser.builder().username(getName()).nickname(getNickname()).profileHref(getProfileHref()).build();
+    }
+
+    @Override
+    public String toString() {
+        return "GithubUserProperty{" +
+                "properties=" + properties +
+                '}';
     }
 }

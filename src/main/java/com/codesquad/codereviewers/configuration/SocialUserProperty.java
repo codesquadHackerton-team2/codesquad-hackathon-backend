@@ -7,6 +7,7 @@ public interface SocialUserProperty {
     String getProfileHref();
     String getEmail();
     String getNickname();
+    String getDescription();
 
     RegisteredUser generateEntity();
 }

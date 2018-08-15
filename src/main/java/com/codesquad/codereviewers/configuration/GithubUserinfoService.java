@@ -1,8 +1,10 @@
 package com.codesquad.codereviewers.configuration;
 
+import com.codesquad.codereviewers.configuration.security.StringUtils;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -18,6 +20,9 @@ import java.util.Map;
 public class GithubUserinfoService {
     private final Logger log = LoggerFactory.getLogger(GithubUserinfoService.class);
     private static final String HEADER_PREFIX = "token ";
+
+    @Autowired
+    private StringUtils utils;
 
     @Value("${github.userinfo.endpoint}")
     private String userinfoEndpoint;
@@ -36,7 +41,9 @@ public class GithubUserinfoService {
         log.info("processing authentication request for token {}", token);
 
         RestTemplate template = new RestTemplate();
-        HttpEntity<String> entity = new HttpEntity<>("parameters", generateHeaders(token));
+        String accessToken = fetchUserToken(token);
+        HttpEntity<String> entity = new HttpEntity<>("parameters", generateHeaders(accessToken));
+        log.info("generated request parameters: {}", entity);
         ParameterizedTypeReference<Map<String, String>> typeRef = new ParameterizedTypeReference<Map<String, String>>() {};
 
         ResponseEntity<Map<String, String>> responseEntity = template.exchange(userinfoEndpoint, HttpMethod.GET, entity, typeRef);
@@ -50,7 +57,9 @@ public class GithubUserinfoService {
         HttpEntity<Map<String, String>> request = new HttpEntity<>(generatePostMap(originalToken));
 
         ResponseEntity<String> response = template.postForEntity(tokenExchangeEndpoint, request, String.class);
-        return response.getBody();
+        log.info("response header: {}", response.getHeaders());
+        log.info("response body: {}", response.getBody());
+        return utils.parseAccessToken(response.getBody());
     }
 
     private HttpHeaders generateHeaders(String token) {
