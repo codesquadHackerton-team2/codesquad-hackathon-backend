@@ -29,8 +29,13 @@ public class ApiV1Controller {
         articleService.saveArticle(article);
     }
 
-    @GetMapping("/article")
+    @GetMapping("/article/get/all")
     public List<Article> getAllArticles() {
         return articleService.getAllArticle();
+    }
+
+    @GetMapping("/article/get/featured")
+    public List<Article> getFeaturedArticles() {
+        return articleService.getAllFeatured();
     }
 }

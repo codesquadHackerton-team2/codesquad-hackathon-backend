@@ -23,6 +23,8 @@ public class Article {
     private String content;
     private String permalink;
 
+    private boolean featured;
+
     @CreatedDate
     private LocalDateTime createdTime;
 

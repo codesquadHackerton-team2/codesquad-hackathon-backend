@@ -25,6 +25,11 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public List<Article> getAllFeatured() {
+        return articleRepository.findByFeatured(true);
+    }
+
     @Transactional
     public Article saveArticle(Article article) {
         return articleRepository.save(article);
