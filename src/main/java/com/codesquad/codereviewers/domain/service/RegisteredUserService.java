@@ -20,6 +20,11 @@ public class RegisteredUserService {
     private RegisteredUserRepository repository;
 
     @Transactional(readOnly = true)
+    public RegisteredUser getUserById(Long id) {
+        return repository.findById(id).orElseThrow(supplyException());
+    }
+
+    @Transactional(readOnly = true)
     public RegisteredUser getUserByGithubCode(String githubCode) {
         return repository.findByGithubCode(githubCode).orElse(new UnregisteredUser(uuidUtil.generateUUID()));
     }

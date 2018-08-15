@@ -1,10 +1,12 @@
 package com.codesquad.codereviewers.configuration;
 
 import com.codesquad.codereviewers.configuration.security.LoggedOnToken;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.codesquad.codereviewers.domain.RegisteredUser;
+import com.codesquad.codereviewers.domain.service.RegisteredUserService;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ public class JwtService {
 
     @Value("${jwt.signingkey}")
     private String signingKey;
+
+    @Autowired
+    private RegisteredUserService userService;
 
     public String generateToken(LoggedOnToken token) {
         String generatedToken = null;
@@ -27,8 +32,21 @@ public class JwtService {
         }catch (Exception e) {
             log.error("error occurred while generating JWT. {}", e);
         }
-
         return generatedToken;
     }
 
+    public RegisteredUser decodeToken(String token) {
+        Jws<Claims> jws = null;
+
+        try {
+            jws = Jwts.parser()
+                    .setSigningKey(signingKey)
+                    .parseClaimsJws(token);
+        } catch (JwtException e) {
+            log.error("error occurred while decoding JWT: {}", e);
+        }
+
+        Long userId = jws.getBody().get("USER_ID", Long.class);
+        return userService.getUserById(userId);
+    }
 }

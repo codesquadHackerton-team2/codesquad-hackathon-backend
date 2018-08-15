@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         return null;

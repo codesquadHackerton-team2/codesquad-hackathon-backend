@@ -23,6 +23,7 @@ public class JwtServiceTest {
 
     @Autowired
     private JwtService jwtService;
+
     private RegisteredUser user;
 
     @Before
